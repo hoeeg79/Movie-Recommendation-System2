@@ -8,9 +8,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.nio.file.StandardOpenOption.APPEND;
+
 public class MovieDAO implements IMovieDataAccess {
 
-    private static final String MOVIES_FILE = "data/movie_titles.txt";
+    private static final String MOVIES_FILE = "data/movie_titles_test.txt";
     private static final Path MOVIES_PATH = Path.of(MOVIES_FILE);
 
     public List<Movie> getAllMovies() throws IOException {
@@ -37,7 +39,11 @@ public class MovieDAO implements IMovieDataAccess {
 
     @Override
     public Movie createMovie(String title, int year) throws Exception {
-        return null;
+        List<String> lines = Files.readAllLines(MOVIES_PATH);
+        String movieToFile = "\n" + (lines.size() + 1) + "," + year + "," + title;
+        Files.writeString(MOVIES_PATH, movieToFile, APPEND);
+
+        return new Movie(lines.size(), year, title);
     }
 
     @Override

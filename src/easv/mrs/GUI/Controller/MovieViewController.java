@@ -2,8 +2,11 @@ package easv.mrs.GUI.Controller;
 
 import easv.mrs.BE.Movie;
 import easv.mrs.GUI.Model.MovieModel;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
@@ -13,8 +16,14 @@ import java.util.ResourceBundle;
 public class MovieViewController implements Initializable {
 
 
-    public TextField txtMovieSearch;
-    public ListView<Movie> lstMovies;
+    @FXML
+    private TextField txtMovieSearch;
+    @FXML
+    private ListView<Movie> lstMovies;
+    @FXML
+    private TextField txtYear;
+    @FXML
+    private TextField txtTitle;
 
     private MovieModel movieModel;
 
@@ -30,8 +39,7 @@ public class MovieViewController implements Initializable {
 
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle)
-    {
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         lstMovies.setItems(movieModel.getObservableMovies());
 
         txtMovieSearch.textProperty().addListener((observableValue, oldValue, newValue) -> {
@@ -45,8 +53,7 @@ public class MovieViewController implements Initializable {
 
     }
 
-    private void displayError(Throwable t)
-    {
+    private void displayError(Throwable t) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Something went wrong");
         alert.setHeaderText(t.getMessage());
@@ -54,5 +61,14 @@ public class MovieViewController implements Initializable {
     }
 
 
+    public void handleAddMovie(ActionEvent actionEvent) {
+        String title = txtTitle.getText();
+        int year = Integer.parseInt(txtYear.getText());
 
+        try {
+            movieModel.createMovie(title, year);
+        } catch (Exception e) {
+            displayError(e);
+        }
+    }
 }

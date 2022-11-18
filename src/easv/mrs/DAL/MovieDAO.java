@@ -41,10 +41,15 @@ public class MovieDAO implements IMovieDataAccess {
 
     @Override
     public Movie createMovie(String title, int year) throws Exception {
-        String movieToFile = "\n" + (lines.size() + 1) + "," + year + "," + title;
-        Files.writeString(MOVIES_PATH, movieToFile, APPEND);
+        //Find the ID the new movie will get
+        int nextId = getNextID();
+        //Creating the new line to be added
+        String newLine = "\r\n" + nextId + "," + year + "," + title;
 
-        return new Movie(lines.size(), year, title);
+        //Append new line using JAVA NIO
+        Files.write(MOVIES_PATH, newLine.getBytes(),APPEND);
+
+        return new Movie(nextId,year,title);
     }
 
     @Override
@@ -69,9 +74,6 @@ public class MovieDAO implements IMovieDataAccess {
 
         return lastMovie.getId() + 1;
     }
-
-
-
 
 
     /*

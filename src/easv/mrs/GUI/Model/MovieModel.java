@@ -30,8 +30,8 @@ public class MovieModel {
     }
 
     public void createMovie(String title, int year) throws Exception {
-        movieManager.createMovie(title, year);
-        updateMovieList();
+        Movie  m = movieManager.createMovie(title, year);
+        moviesToBeViewed.add(m);
     }
 
     public void updateMovieList() throws Exception {

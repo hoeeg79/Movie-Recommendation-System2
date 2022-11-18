@@ -28,7 +28,7 @@ public class MovieManager {
         return searchResult;
     }
 
-    public void createMovie(String title, int year) throws Exception {
-        movieDAO.createMovie(title,year);
+    public Movie createMovie(String title, int year) throws Exception {
+        return movieDAO.createMovie(title,year);
     }
 }

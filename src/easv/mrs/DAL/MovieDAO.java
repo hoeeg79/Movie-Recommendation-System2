@@ -6,6 +6,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static java.nio.file.StandardOpenOption.APPEND;
@@ -34,12 +35,12 @@ public class MovieDAO implements IMovieDataAccess {
             movies.add(new Movie(id,year,title));
         }
 
+        movies.sort(Comparator.comparingInt(Movie::getId));
         return movies;
     }
 
     @Override
     public Movie createMovie(String title, int year) throws Exception {
-        List<String> lines = Files.readAllLines(MOVIES_PATH);
         String movieToFile = "\n" + (lines.size() + 1) + "," + year + "," + title;
         Files.writeString(MOVIES_PATH, movieToFile, APPEND);
 
@@ -56,6 +57,18 @@ public class MovieDAO implements IMovieDataAccess {
 
     }
 
+    /**
+     * Get the next ID
+     * @return - the next available ID
+     * @throws IOException
+     */
+    private int getNextID() throws IOException {
+        List<Movie> movies = getAllMovies();
+
+        Movie lastMovie = movies.get(movies.size() - 1);
+
+        return lastMovie.getId() + 1;
+    }
 
 
 
@@ -99,6 +112,5 @@ public class MovieDAO implements IMovieDataAccess {
         return allMovieList;
     }
     */
-
 
 }

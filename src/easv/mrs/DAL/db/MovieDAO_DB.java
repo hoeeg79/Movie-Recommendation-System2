@@ -3,10 +3,7 @@ package easv.mrs.DAL.db;
 import easv.mrs.BE.Movie;
 import easv.mrs.DAL.IMovieDataAccess;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +55,9 @@ public class MovieDAO_DB implements IMovieDataAccess {
             if(rs.next()){
                 id = rs.getInt(1);
             }
+        }catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not create movie" + ex);
         }
 
         //Generate new movie object to return
@@ -66,13 +66,42 @@ public class MovieDAO_DB implements IMovieDataAccess {
     }
 
     public void updateMovie(Movie movie) throws Exception {
-        //TODO Do this
-        throw new UnsupportedOperationException();
+        try (Connection conn = databaseConnector.getConnection()) {
+
+            //SQL Statement
+            String sql = "UPDATE Movie SET Title = ?, Year = ? WHERE Id = ?;";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            //Bind Title, Year, and ID to Statement
+            stmt.setString(1, movie.getTitle());
+            stmt.setInt(2, movie.getYear());
+            stmt.setInt(3, movie.getId());
+
+            //Run Update
+            stmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not update movie" + ex);
+        }
     }
 
     public void deleteMovie(Movie movie) throws Exception {
-        //TODO Do this
-        throw new UnsupportedOperationException();
+        try (Connection conn = databaseConnector.getConnection()){
+            //SQL statement
+            String sql = "DELETE FROM Movie WHERE id = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+
+            //Bind id to statement
+            stmt.setInt(1, movie.getId());
+
+            //Run statement
+            stmt.executeUpdate();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new Exception("Could not delete movie" + ex);
+        }
     }
 
     public List<Movie> searchMovies(String query) throws Exception {

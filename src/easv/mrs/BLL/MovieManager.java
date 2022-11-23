@@ -32,4 +32,14 @@ public class MovieManager {
     public Movie createMovie(String title, int year) throws Exception {
         return movieDAO.createMovie(title,year);
     }
+
+    public void updateMovie(Movie updatedMovie) throws Exception {
+        movieDAO.updateMovie(updatedMovie);
+
+        //if
+    }
+
+    public void deleteMovie(Movie deleteMovie) throws Exception {
+        movieDAO.deleteMovie(deleteMovie);
+    }
 }
